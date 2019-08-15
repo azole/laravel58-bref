@@ -1,72 +1,112 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# Bref Laravel Workshop
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+https://bref.sh/
 
-## About Laravel
+> Bref provides the tools and documentation to easily deploy and run serverless PHP applications.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Try to deploy Laravel Project to AWS Lambda
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Bref relies on serverless and requires PHP 7.2+.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Docker image
 
-## Learning Laravel
+If you don't have PHP 7.2+, you can use docker image:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1400 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+docker pull php:7.2-cli
 
-## Laravel Sponsors
+docker run -it php:7.2-cli /bin/bash
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### Install composer
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
+```bash
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+mv composer.phar /usr/local/bin/composer
+```
 
-## Contributing
+### Prepare tools
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Install tools what you need:
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+apt-get update
+apt-get upgrade -y
+apt-get install -y unzip 
+apt-get install -y git
 
-## License
+# if you need...
+apt-get install -y nano
 
-The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+
+### Install npm
+
+```bash
+apt-get install -y nodejs npm
+```
+
+### Install serverless
+
+```bash
+npm install -g serverless
+
+serverless config credentials --provider aws --key <key> --secret <secret>
+```
+
+### Create Laravel Project
+
+```bash
+composer create-project laravel/laravel laravel58-bref --prefer-dist
+composer require bref/bref
+```
+
+or clone this repo:
+
+```bash
+git clone https://github.com/azole/laravel58-bref.git
+cd laravel58-bref
+composer install
+cp .env.example .env
+php artisan k:g
+```
+
+### Laravel-Bref
+
+https://bref.sh/docs/frameworks/laravel.html
+
+- prepare serverless.yml
+  - service name
+  - region
+- edit `bootstrap/app.php`
+- edit `.env`
+- edit `app/Providers/AppServiceProvider.php`
+
+
+### Deployment
+
+https://bref.sh/docs/deploy.html
+
+```bash
+composer install --optimize-autoloader --no-dev
+serverless deploy
+```
+
+#### deletion
+
+```bash
+serverless remove
+```
+
+## Observe What Happen in AWS
+
+### CloudFormation
+
+Go to AWS CloudFormation, you will find a new stacks
+
+
+
