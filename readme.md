@@ -4,11 +4,13 @@ https://bref.sh/
 
 > Bref provides the tools and documentation to easily deploy and run serverless PHP applications.
 
-## Try to deploy Laravel Project to AWS Lambda
+Bref relies on serverless and requires PHP 7.2+. If you don't have the environment, you can try docker image.
 
-Bref relies on serverless and requires PHP 7.2+.
 
-### Docker image
+- https://medium.com/@azole/deploy-serverless-laravel-by-bref-6f28b1e0d53a
+
+
+## Build Environment Manually
 
 If you don't have PHP 7.2+, you can use docker image:
 
@@ -36,8 +38,7 @@ Install tools what you need:
 ```bash
 apt-get update
 apt-get upgrade -y
-apt-get install -y unzip 
-apt-get install -y git
+apt-get install -y unzip git
 
 # if you need...
 apt-get install -y nano
@@ -58,7 +59,19 @@ npm install -g serverless
 serverless config credentials --provider aws --key <key> --secret <secret>
 ```
 
-### Create Laravel Project
+## Build Environment By Dockerfile
+
+```bash
+docker build . -t laravel-bref-builder
+
+docker run -it -e AWS_KEY=<key> -e AWS_SECRET=<secret> laravel-bref-builder /bin/bash
+
+# or mount host folder to container
+
+docker run -it -e AWS_KEY=<key> -e AWS_SECRET=<secret> -v <host-folder>:<container-folder> laravel-bref-builder /bin/bash
+```
+
+## Create Laravel Project
 
 ```bash
 composer create-project laravel/laravel laravel58-bref --prefer-dist
